@@ -9,12 +9,12 @@ param
     
 Start-Transcript C:\RRASinstall.log
 
-$TargetIPRange = $TargetIPRange + ':100'
+$TargetIPRangeMetric = $TargetIPRange + ':100'
 Install-WindowsFeature Routing -IncludeManagementTools
 Install-RemoteAccess -VpnType VpnS2S
 
 Start-Sleep 10
-Add-VpnS2SInterface -Name "remote" $TargetRRASIP -Protocol IKEv2 -AuthenticationMethod PSKOnly -SharedSecret "ilovestack!" -IPv4Subnet $TargetIPRange -persistent
+Add-VpnS2SInterface -Name "remote" $TargetRRASIP -Protocol IKEv2 -AuthenticationMethod PSKOnly -SharedSecret "ilovestack!" -IPv4Subnet $TargetIPRangeMetric -persistent
 Set-VpnS2SInterface -Name "remote" -InitiateConfigPayload $false 
 
 Start-Sleep 10
