@@ -618,8 +618,7 @@
             }
           },
           "dependsOn": [
-            "[concat(variables('VNet2VMName'), '1')]",
-            "[concat(variables('VNet1VMName'), '1','/CustomScriptExtension')]"
+            "[concat(variables('VNet2VMName'), '1')]"
           ]      
         }
     ],
