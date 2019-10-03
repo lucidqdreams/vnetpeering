@@ -102,8 +102,15 @@
         "description": "Static Address for VNet2 RRAS Server.  Used for User defined route in Route table."
       },
       "defaultValue":"10.2.1.4"
-    }
+    },
 
+    "scriptfilepath": {
+      "type": "string",
+      "metadata": {
+        "description": "Accessible URL for RRAS Installation script"
+      },
+      "defaultValue":"https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/install-rras.ps1"
+    }
 
   },
 
@@ -157,8 +164,8 @@
     "NICPrefixVNet2": "[concat(variables('VNet2'),variables('vmName'))]",
     "VNet1TunnelPIPName": "[concat(variables('VNet1'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
     "VNet2TunnelPIPName": "[concat(variables('VNet2'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
-    
-    "scriptfilepath": "https://raw.githubusercontent.com/kevinsul/azurestack-rras/master/install-rras.ps1",
+
+    "scriptfilepath": "[parameters('scriptfilepath')]",
     "scriptfilename": "install-rras.ps1"    
   },
 
