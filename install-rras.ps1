@@ -21,7 +21,7 @@ Start-Sleep 10
 
 $i=1
 do {
-    get-VpnS2SInterface
+    get-VpnS2SInterface | Format-Table
     start-sleep 6
     $i++
     Write-output $i
