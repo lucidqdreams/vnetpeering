@@ -514,7 +514,6 @@
               }
             ]
           },
-          "licenseType": "Windows_Server",
           "diagnosticsProfile": {
             "bootDiagnostics": {
                 "enabled": true,
@@ -571,7 +570,6 @@
               }
             ]
           },
-          "licenseType": "Windows_Server",
           "diagnosticsProfile": {
             "bootDiagnostics": {
                 "enabled": true,
