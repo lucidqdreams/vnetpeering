@@ -7,7 +7,6 @@ param
     )
 
     
-ConvertTo-SecureString -AsPlainText -Force 
 Start-Transcript C:\RRASinstall.log
 
 $TargetIPRange = $TargetIPRange + ':100'
