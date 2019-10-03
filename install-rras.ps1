@@ -14,17 +14,14 @@ Install-RemoteAccess -VpnType VpnS2S
 
 Start-Sleep 10
 Add-VpnS2SInterface -Name "remote" $TargetRRASIP -Protocol IKEv2 -AuthenticationMethod PSKOnly -SharedSecret "ilovestack!" -IPv4Subnet $TargetIPRange 
-Set-VpnS2SInterface -Name "remote" -InitiateConfigPayload $false
+Set-VpnS2SInterface -Name "remote" -InitiateConfigPayload $false 
 Set-VpnS2SInterface -Name "remote" -persistent
 
-
-
 Start-Sleep 10
-get-VpnS2SInterface
 
 $i=1
 do {
-    connect-VpnS2SInterface -name 'remote'
+    get-VpnS2SInterface
     start-sleep 5
     $i++
     Write-output $i
