@@ -10,7 +10,7 @@ Start-Transcript C:\RRASinstall.log
 Start-Sleep 60
 
 $TargetIPRangeMetric = $TargetIPRange + ':100'
-Install-WindowsFeature Routing 
+Install-WindowsFeature Routing -includemanagementtools
 Start-Sleep 15
 Install-RemoteAccess -VpnType VpnS2S
 
