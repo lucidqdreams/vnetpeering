@@ -108,7 +108,7 @@
       "metadata": {
         "description": "Accessible URL for RRAS Installation script"
       },
-      "defaultValue":"https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/install-rras.ps1"
+      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/install-rras.ps1"
     }
 
   },
@@ -165,7 +165,9 @@
     "VNet2TunnelPIPName": "[concat(variables('VNet2'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
 
     "scriptfilepath": "[parameters('scriptfilepath')]",
-    "scriptfilename": "install-rras.ps1"    
+    "scriptfilename": "install-rras.ps1",
+
+    "InstallRRASDSC": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/DSC/InstallRRAS.zip"
   },
 
   "resources": [
@@ -512,6 +514,13 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet1'),'1-', variables('VNet1InternalSubnetName'),'-nic'))]"
               }
             ]
+          },
+          "licenseType": "Windows_Server",
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true,
+                "storageUri": "[reference(resourceId(resourcegroup().name, 'Microsoft.Storage/storageAccounts', variables('storageName')), '2015-06-15').primaryEndpoints['blob']]"
+            }
           }
         }       
       },
@@ -562,9 +571,41 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet2'),'1-', variables('VNet2InternalSubnetName'),'-nic'))]"
               }
             ]
+          },
+          "licenseType": "Windows_Server",
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true,
+                "storageUri": "[reference(resourceId(resourcegroup().name, 'Microsoft.Storage/storageAccounts', variables('storageName')), '2015-06-15').primaryEndpoints['blob']]"
+            }
           }
         }       
       },
+          {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(concat(variables('VNet2VMName'), '1','/InstallRRAS'))]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "Install"
+      },
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.77",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "modulesUrl": "[variables('InstallRRASDSC')]",
+          "configurationFunction": "InstallRRAS\\InstallRRAS"
+        },
+        "protectedSettings": {
+          "Items": {
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet2VMName'), '1')))]"
+      ]
+    },
 
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
