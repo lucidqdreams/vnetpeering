@@ -7,7 +7,7 @@ param
     )
 
 Start-Transcript C:\RRASinstall.log
-Start-Sleep 30
+Start-Sleep 60
 
 $TargetIPRangeMetric = $TargetIPRange + ':100'
 Install-WindowsFeature Routing 
