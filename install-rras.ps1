@@ -6,8 +6,8 @@ param
         [String] $TargetIPRange          
     )
 
-    
 Start-Transcript C:\RRASinstall.log
+Start-Sleep 15
 
 $TargetIPRangeMetric = $TargetIPRange + ':100'
 Install-WindowsFeature Routing -IncludeManagementTools
@@ -17,7 +17,7 @@ Start-Sleep 10
 Add-VpnS2SInterface -Name "remote" $TargetRRASIP -Protocol IKEv2 -AuthenticationMethod PSKOnly -SharedSecret "ilovestack!" -IPv4Subnet $TargetIPRangeMetric -persistent
 Set-VpnS2SInterface -Name "remote" -InitiateConfigPayload $false 
 
-Start-Sleep 10
+
 
 $i=1
 do {
