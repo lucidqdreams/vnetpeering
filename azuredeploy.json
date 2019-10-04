@@ -573,7 +573,7 @@
         "properties": {
           "publisher": "Microsoft.Compute",
           "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
+          "typeHandlerVersion": "1.9.3",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
@@ -595,7 +595,7 @@
         "properties": {
           "publisher": "Microsoft.Compute",
           "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
+          "typeHandlerVersion": "1.9.3",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
