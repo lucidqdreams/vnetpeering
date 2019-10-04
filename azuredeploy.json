@@ -24,13 +24,6 @@
       },
       "defaultValue":"VNet1"
     },
-    "VNet2Name": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of VNet1.  THis will e used to label the resources"
-      },
-      "defaultValue":"VNet2"
-    },
     "VNet1AddressSpace": {
       "type": "string",
       "metadata": {
@@ -67,7 +60,13 @@
       "defaultValue":"10.1.1.4"
     },
 
-
+    "VNet2Name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of VNet1.  THis will e used to label the resources"
+      },
+      "defaultValue":"VNet2"
+    },
     "VNet2AddressSpace": {
       "type": "string",
       "metadata": {
@@ -531,7 +530,8 @@
         "dependsOn": [
             "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet2'), '1-', variables('TunnelSubnetName'),'-nic'))]",
             "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet2'), '1-', variables('VNet2InternalSubnetName'),'-nic'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts',concat(variables('storageName')))]"
+            "[resourceId('Microsoft.Storage/storageAccounts',concat(variables('storageName')))]",
+            "[resourceId('Microsoft.Compute/virtualMachines',concat(variables('VNet1VMName'), '1'))]"
           ],
         "properties": {
           "hardwareProfile": {
