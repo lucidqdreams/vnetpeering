@@ -586,7 +586,7 @@
       "name": "[concat(concat(variables('VNet2VMName'), '1','/InstallRRAS'))]",
       "location": "[resourceGroup().location]",
       "tags": {
-        "displayName": "Install"
+        "displayName": "InstallRRAS"
       },
       "properties": {
         "publisher": "Microsoft.Powershell",
@@ -595,7 +595,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "modulesUrl": "[variables('InstallRRASDSC')]",
-          "configurationFunction": "InstallRRAS\\InstallRRAS"
+          "configurationFunction": "InstallRRAS.ps1\\InstallRRAS"
         },
         "protectedSettings": {
           "Items": {
@@ -646,7 +646,7 @@
             }
           },
           "dependsOn": [
-            "[concat(variables('VNet2VMName'), '1')]"
+            "[resourceId('Microsoft.Compute/virtualMachines/extensions',concat(variables('VNet2VMName'), '1'),'InstallRRAS')]"
           ]      
         }
     ],
