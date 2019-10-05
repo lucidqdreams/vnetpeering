@@ -20,12 +20,19 @@ configuration InstallRRAS
             Name = 'RSAT-RemoteAccess-PowerShell'
             DependsOn = '[WindowsFeature]Routing'
         }
-        Service RemoteAccess
+        Service RemoteAccessAutomatic
         {
             Name        = "RemoteAccess"
             StartupType = "Automatic"
             State       = "Running"
             DependsOn = '[WindowsFeature]Routing'
+        }
+        Service RemoteAccess
+        {
+            Ensure = 'Present'
+            Name = 'RemoteAccess'
+            State = 'Running'
+            DependsOn = '[Service]RemoteAccessAutomatic'
         }
         
 

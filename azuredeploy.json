@@ -22,7 +22,7 @@
       "metadata": {
         "description": "The Shared Secret phrase for the tunnel"
       },
-      "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]"
+      "defaultValue": "ilovestack!"
     },
     "VNet1Name": {
       "type": "string",
@@ -645,7 +645,8 @@
           }
         },
         "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet2VMName'), '1')))]"
+          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet2VMName'), '1')))]",
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions',concat(variables('VNet1VMName'), '1'),'InstallRRAS')]"
         ]
       },
       {
