@@ -8,6 +8,7 @@ param
         [String] $SharedSecret
     )
 
+
 $S2SName = ($TargetIPRange.Replace('.','')).Replace('/','')
 Write-Output "Creating Tunnel called $S2SName"
 
@@ -21,6 +22,8 @@ if ($RRASInstalled -ne 'Installed')
 {
     write-output 'Installing VpnS2S'
     Install-RemoteAccess -VpnType VpnS2S
+    start-sleep 30
+
 }
 else
 {
