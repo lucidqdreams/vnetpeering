@@ -1,35 +1,56 @@
 param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,Position=1)]
         [String] $TargetRRASIP,
-        [Parameter(Mandatory=$true)]
-        [String] $TargetIPRange          
+        [Parameter(Mandatory=$true,Position=2)]
+        [String] $TargetIPRange,
+        [Parameter(Mandatory=$true,Position=3)]     
+        [String] $SharedSecret
     )
 
-Start-Sleep 60
-
-Start-Transcript C:\RRASinstall.log
-
 $S2SName = ($TargetIPRange.Replace('.','')).Replace('/','')
-
+Write-Output "Creating Tunnel called $S2SName"
 
 $TargetIPRangeMetric = $TargetIPRange + ':100'
 
-Add-VpnS2SInterface -Name $S2SName  $TargetRRASIP -Protocol IKEv2 -AuthenticationMethod PSKOnly -SharedSecret "ilovestack!" -IPv4Subnet $TargetIPRangeMetric -persistent
-Set-VpnS2SInterface -Name $S2SName  -InitiateConfigPayload $false 
+Write-Output "Tunnel EndPoint: $TargetRRASIP"
+Write-Output "Subnet and Metric in Tunnel: $TargetIPRangeMetric"
+
+$RRASInstalled = (Get-RemoteAccess).VpnS2SStatus
+if ($RRASInstalled -ne 'Installed')
+{
+    write-output 'Installing VpnS2S'
+    Install-RemoteAccess -VpnType VpnS2S
+}
+else
+{
+    write-output 'VpnS2S Installed'
+}
+
+$existing = get-VpnS2SInterface | where {$_.name -eq $S2SName}
+if ($existing.name -eq $S2SName)
+{
+    Write-Output "Existing Tunnel $S2SName Found, Deleting..."
+    disconnect-VpnS2SInterface -Name $S2SName -Confirm:$false -Force
+    remove-VpnS2SInterface -Name $S2SName -Confirm:$false -Force
+}
+
+Write-Output "Configuring Tunnel $S2SName"
+try 
+{
+    Add-VpnS2SInterface -Name $S2SName $TargetRRASIP -Protocol IKEv2 -AuthenticationMethod PSKOnly -SharedSecret $SharedSecret -IPv4Subnet $TargetIPRangeMetric -persistent -AutoConnectEnabled $true
+    Set-VpnS2SInterface -Name $S2SName  -InitiateConfigPayload $false 
+    start-sleep 5
+    $result = get-VpnS2SInterface -name $S2SName
+    Write-Output "Tunnel Created, Status: $($result.ConnectionState)"
+}
+catch{}
+Finally{
+    start-sleep 60
+    $result = get-VpnS2SInterface -name $S2SName
+}
+
+return "Tunnel Status: $($result.ConnectionState)"
 
 
-$i=1
-do {
-    get-VpnS2SInterface | Format-Table
-    start-sleep 2
-    $i++
-    Write-output $i
-} while ($i -lt 10)
-
-
-$result = get-VpnS2SInterface -name $S2SName
-Write-Output $result.ConnectionState
-
-Stop-Transcript
 
