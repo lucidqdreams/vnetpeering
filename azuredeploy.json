@@ -17,6 +17,13 @@
       },
       "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]"
     },
+    "SharedSecret": {
+      "type": "string",
+      "metadata": {
+        "description": "The Shared Secret phrase for the tunnel"
+      },
+      "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]"
+    },
     "VNet1Name": {
       "type": "string",
       "metadata": {
@@ -106,10 +113,19 @@
     "scriptfilepath": {
       "type": "string",
       "metadata": {
-        "description": "Accessible URL for RRAS Installation script"
+        "description": "Accessible URL for RRAS Site to Site VPN script"
       },
-      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/install-rras.ps1"
+      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/Add-Site2Site.ps1"
+    },
+
+    "DSCfilepath": {
+      "type": "string",
+      "metadata": {
+        "description": "Accessible URL for RRAS DSC script"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/DSC/InstallRRAS.zip"
     }
+    
 
   },
 
@@ -143,7 +159,7 @@
     "VNet1InternalSubnetName": "Internal",
     "VNet2InternalSubnetName": "Internal",      
     "NamingSuffix": "",        
-    "NamingSuffixExample": "[concat('-',resourceGroup().name)]",        
+            
     "VNet1Name": "[concat(variables('vnet1'),'-vnet',variables('NamingSuffix') )]",
     "VNet2Name": "[concat(variables('vnet2'),'-vnet',variables('NamingSuffix'))]",
     "vnetID1": "[resourceId('Microsoft.Network/virtualNetworks', variables('VNet1Name'))]",
@@ -163,11 +179,12 @@
     "NICPrefixVNet2": "[concat(variables('VNet2'),variables('vmName'))]",
     "VNet1TunnelPIPName": "[concat(variables('VNet1'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
     "VNet2TunnelPIPName": "[concat(variables('VNet2'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
-
+    
+    "InstallRRASDSC": "[parameters('DSCfilepath')]",
     "scriptfilepath": "[parameters('scriptfilepath')]",
-    "scriptfilename": "install-rras.ps1",
+    "scriptfilename": "Add-Site2Site.ps1",
+    "SharedSecret": "[parameters('SharedSecret')]"
 
-    "InstallRRASDSC": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/DSC/InstallRRAS.zip"
   },
 
   "resources": [
@@ -644,7 +661,7 @@
             "fileUris": [
                 "[variables('scriptFilepath')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet2TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet2AddressSpace'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet2TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet2AddressSpace'),' -SharedSecret ', variables('SharedSecret'))]"
             }
           },
         
@@ -666,7 +683,7 @@
             "fileUris": [
                 "[variables('scriptFilepath')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
             }
           },
           "dependsOn": [
