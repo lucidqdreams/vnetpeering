@@ -34,7 +34,7 @@ if ($RRASInstalled -ne 'Installed')
 {
     write-output 'Installing VpnS2S'
     Install-RemoteAccess -VpnType VpnS2S -Verbose
-    start-sleep 30
+    start-sleep 10
 
 }
 else
