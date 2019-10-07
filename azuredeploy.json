@@ -133,8 +133,8 @@
     "windowsImageOffer": "WindowsServer",
     "windowsImageVersion": "latest",   
     "vmName": "-RRAS",
-    "VNet1VMName": "[concat(substring(variables('VNet1'),0,9),variables('vmName'))]",
-    "VNet2VMName": "[concat(substring(variables('VNet2'),0,9),variables('vmName'))]",
+    "VNet1VMName": "[concat(substring(variables('VNet1'),0,8),variables('vmName'))]",
+    "VNet2VMName": "[concat(substring(variables('VNet2'),0,8),variables('vmName'))]",
 
     "VNet1": "[parameters('VNet1Name')]",
     "VNet2": "[parameters('VNet2Name')]",
