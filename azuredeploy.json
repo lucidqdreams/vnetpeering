@@ -164,8 +164,8 @@
     "TunnelSubnetRefVNet2": "[concat(variables('vnetID2'),'/subnets/',variables('TunnelSubnetName'))]",
     "InternalSubnetRefVNet2": "[concat(variables('vnetID2'),'/subnets/',variables('VNet2InternalSubnetName'))]",
 
-    "RouteTable1Name": "[concat('Routeto',variables('VNet1'),variables('NamingSuffix'),'-rt' )]",
-    "RouteTable2Name": "[concat('Routeto',variables('VNet2'),variables('NamingSuffix'),'-rt' )]",
+    "RouteTable1Name": "[concat('RoutesFor',variables('VNet1'),variables('NamingSuffix'),'-rt' )]",
+    "RouteTable2Name": "[concat('RoutesFor',variables('VNet2'),variables('NamingSuffix'),'-rt' )]",
     
     "TunnelnsgName": "[concat(variables('TunnelSubnetName'),variables('NamingSuffix'),'-nsg' )]",
     "TunnelnsgID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('TunnelnsgName'))]",    
