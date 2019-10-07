@@ -11,8 +11,9 @@ Requirements:
 - ASDK or Azure Stack Integrated System with latest updates applied.
 - Required Azure Stack Marketplace items:
     -  Windows Server 2016 Datacenter (latest build recommended)
-    -  Custom Script Extension
+    -  PowerShell DSC 
+	-  Custom Script Extension
     
-The only parameters this template requires is for naming the Administrator account for the RRAS servers and password for the Administrator accounts.  If you wish to provide custom values for the VNET IP ranges, subnets, names, etc., the variables (and in some cases explicit values within the various sections of the template) within the template can be modified accordingly.  Be careful to keep these values within legal ranges as deployment may fail.
+This template provides default values for VNet naming and IP addressing.  It requires a password for the administrator (rrasadmin) and also offers the ability to use your own storage blob with SAS token.  Be careful to keep these values within legal ranges as deployment may fail.  The powershell DSC script that is executed via the custom script extension on each RRAS VM.  This script installs RRAS and all required dependent services and features, and configures the IKEv2 IPSec tunnel between the two RRAS servers with a shared key.
 
-Also note the custom powershell script that is executed via the custom script extension on each RRAS VM.  This script installs RRAS and all required dependent services and features, and configures the IKEv2 IPSec tunnel between the two RRAS servers with a shared key.
+![alt text](https://github.com/lucidqdreams/vnetpeering/blob/master/Images/S2SVPNTunnelDetailed.jpg)
