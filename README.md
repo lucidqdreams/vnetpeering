@@ -16,4 +16,4 @@ Requirements:
     
 This template provides default values for VNet naming and IP addressing.  It requires a password for the administrator (rrasadmin) and also offers the ability to use your own storage blob with SAS token.  Be careful to keep these values within legal ranges as deployment may fail.  The powershell DSC script that is executed via the custom script extension on each RRAS VM.  This script installs RRAS and all required dependent services and features, and configures the IKEv2 IPSec tunnel between the two RRAS servers with a shared key.
 
-![alt text](https://github.com/lucidqdreams/vnetpeering/blob/master/Images/S2SVPNTunnelDetailed.jpg)
+![alt text](https://github.com/lucidqdreams/vnetpeering/blob/master/Images/S2SVPNTunnelDetailed2.jpg)
