@@ -1,4 +1,4 @@
-# azurestack-rras
+# AzureStack-S2SVPN
 
 ***This template is intended for use in an Azure Stack environment.***
 
