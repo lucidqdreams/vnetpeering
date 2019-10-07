@@ -47,15 +47,11 @@
     "VNet2InternalGW": {
         "value":"10.2.1.4"
     },
-  
-    "scriptfilepath": {
-        "value": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/Add-Site2Site.ps1"
+    "_artifactsLocation": {
+        "value": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/"
     },
-  
-    "DSCfilepath": {
-        "value": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/DSC/InstallRRAS.zip"
-    }
-      
-
+    "_artifactsLocationSasToken": {
+        "value": ""
+    }  
   }
 }
