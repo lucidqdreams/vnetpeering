@@ -4,129 +4,124 @@
   "apiProfile": "2018-03-01-hybrid",
   "parameters": {
     "adminUsername": {
+      "defaultValue": "vmadmin",
       "type": "string",
       "metadata": {
         "description": "The name of the Administrator of the new VMs"
-      },
-      "defaultValue": "vmadmin"
+      }
     },
     "adminPassword": {
+      "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]",
       "type": "securestring",
       "metadata": {
         "description": "The password for the Administrator account of the new VMs. Default value is subscription id"
-      },
-      "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]"
+      }
     },
     "SharedSecret": {
+      "defaultValue": "ilovestack!",
       "type": "string",
       "metadata": {
         "description": "The Shared Secret phrase for the tunnel"
-      },
-      "defaultValue": "ilovestack!"
+      }
     },
     "VNet1Name": {
+      "defaultValue":"VNet1",
       "type": "string",
       "metadata": {
         "description": "The name of VNet1.  THis will e used to label the resources"
-      },
-      "defaultValue":"VNet1"
+      }
     },
     "VNet1AddressSpace": {
+      "defaultValue":"10.1.0.0/16",
       "type": "string",
       "metadata": {
         "description": "Address Space for VNet1"
-      },
-      "defaultValue":"10.1.0.0/16"
+      }
     },
     "VNet1TunnelSubnetRange": {
+      "defaultValue":"10.1.254.0/24",
       "type": "string",
       "metadata": {
         "description": "Address Range for VNet1 Tunnel Subnet"
-      },
-      "defaultValue":"10.1.254.0/24"
+      }
     },
     "VNet1TunnelGW": {
+      "defaultValue":"10.1.254.4",
       "type": "string",
       "metadata": {
         "description": "Static Address for VNet1 RRAS Server. "
-      },
-      "defaultValue":"10.1.254.4"
+      }
     },
     "VNet1InternalSubnetRange": {
+      "defaultValue":"10.1.1.0/24",
       "type": "string",
       "metadata": {
         "description": "Address Range for VNet1 Internal Subnet"
-      },
-      "defaultValue":"10.1.1.0/24"
+      }      
     },
     "VNet1InternalGW": {
+      "defaultValue":"10.1.1.4",
       "type": "string",
       "metadata": {
         "description": "Static Address for VNet1 RRAS Server.  Used for User defined route in Route table."
-      },
-      "defaultValue":"10.1.1.4"
+      }
     },
-
     "VNet2Name": {
+      "defaultValue":"VNet2",
       "type": "string",
       "metadata": {
         "description": "The name of VNet1.  THis will e used to label the resources"
-      },
-      "defaultValue":"VNet2"
+      }
     },
     "VNet2AddressSpace": {
+      "defaultValue":"10.2.0.0/16",
       "type": "string",
       "metadata": {
         "description": "Address Space for VNet2"
-      },
-      "defaultValue":"10.2.0.0/16"
+      }
     },
     "VNet2TunnelSubnetRange": {
+      "defaultValue":"10.2.254.0/24",
       "type": "string",
       "metadata": {
         "description": "Address Range for VNet2 Tunnel Subnet"
-      },
-      "defaultValue":"10.2.254.0/24"
+      }
     },
     "VNet2TunnelGW": {
+      "defaultValue":"10.2.254.4",
       "type": "string",
       "metadata": {
         "description": "Static Address for VNet2 RRAS Server. "
-      },
-      "defaultValue":"10.2.254.4"
+      }
     },
     "VNet2InternalSubnetRange": {
+      "defaultValue":"10.2.1.0/24",
       "type": "string",
       "metadata": {
         "description": "Address Range for VNet2 Internal Subnet"
-      },
-      "defaultValue":"10.2.1.0/24"
+      }
     },
     "VNet2InternalGW": {
+      "defaultValue":"10.2.1.4",
       "type": "string",
       "metadata": {
         "description": "Static Address for VNet2 RRAS Server.  Used for User defined route in Route table."
-      },
-      "defaultValue":"10.2.1.4"
-    },
-
-    "scriptfilepath": {
+      }
+    },  
+    "_artifactsLocation": {
+      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/",
       "type": "string",
       "metadata": {
-        "description": "Accessible URL for RRAS Site to Site VPN script"
-      },
-      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/Add-Site2Site.ps1"
+        "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+      }
     },
-
-    "DSCfilepath": {
-      "type": "string",
+    "_artifactsLocationSasToken": {
+      "defaultValue": "",
+      "type": "securestring",
       "metadata": {
-        "description": "Accessible URL for RRAS DSC script"
-      },
-      "defaultValue": "https://raw.githubusercontent.com/lucidqdreams/vnetpeering/master/DSC/InstallRRAS.zip"
+        "description": "Auto-generated token to access _artifactsLocation"
+      }
     }
-    
-
   },
 
   "variables": {
@@ -154,7 +149,6 @@
     "VNet2InternalSubnetRange": "[parameters('VNet2InternalSubnetRange')]",
     "VNet2InternalGW": "[parameters('VNet2InternalGW')]",
     
-    
     "TunnelSubnetName": "Tunnel",
     "VNet1InternalSubnetName": "Internal",
     "VNet2InternalSubnetName": "Internal",      
@@ -180,11 +174,11 @@
     "VNet1TunnelPIPName": "[concat(variables('VNet1'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
     "VNet2TunnelPIPName": "[concat(variables('VNet2'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
     
-    "InstallRRASDSC": "[parameters('DSCfilepath')]",
-    "scriptfilepath": "[parameters('scriptfilepath')]",
+    "SharedSecret": "[parameters('SharedSecret')]",
+    "InstallRRASDSC": "[concat(parameters('_artifactsLocation'), 'DSC/InstallRRAS.zip', parameters('_artifactsLocationSasToken'))]",
+    "InstallRRAS": "InstallRRAS.ps1\\InstallRRAS",
     "scriptfilename": "Add-Site2Site.ps1",
-    "SharedSecret": "[parameters('SharedSecret')]"
-
+    "scriptfilepath": "[concat(parameters('_artifactsLocation'), variables('scriptfilename'), parameters('_artifactsLocationSasToken'))]"
   },
 
   "resources": [
@@ -611,7 +605,7 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "modulesUrl": "[variables('InstallRRASDSC')]",
-            "configurationFunction": "InstallRRAS.ps1\\InstallRRAS"
+            "configurationFunction": "[variables('InstallRRAS')]"
           },
           "protectedSettings": {
             "Items": {
@@ -636,7 +630,7 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "modulesUrl": "[variables('InstallRRASDSC')]",
-            "configurationFunction": "InstallRRAS.ps1\\InstallRRAS"
+            "configurationFunction": "[variables('InstallRRAS')]"
           },
           "protectedSettings": {
             "Items": {
