@@ -4,14 +4,14 @@
   "apiProfile": "2018-03-01-hybrid",
   "parameters": {
     "adminUsername": {
-      "defaultValue": "vmadmin",
+      "defaultValue": "rrasadmin",
       "type": "string",
       "metadata": {
         "description": "The name of the Administrator of the new VMs"
       }
     },
     "adminPassword": {
-      "defaultValue": "[concat('Subscription#',subscription().subscriptionId)]",
+      "defaultValue": "[subscription().subscriptionId]",
       "type": "securestring",
       "metadata": {
         "description": "The password for the Administrator account of the new VMs. Default value is subscription id"
