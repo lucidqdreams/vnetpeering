@@ -17,6 +17,18 @@ $TargetIPRangeMetric = $TargetIPRange + ':100'
 Write-Output "Tunnel EndPoint: $TargetRRASIP"
 Write-Output "Subnet and Metric in Tunnel: $TargetIPRangeMetric"
 
+Write-Output "Checking Routing Installation"
+$RoutingInstallation = get-windowsfeature routing
+if ($RoutingInstallation.Installed)
+{
+    Write-Output "Routing Already Installed"
+}
+else
+{
+    Write-Output 'Installing Routing'
+    Install-WindowsFeature Routing -IncludeManagementTools -Verbose
+}
+
 $RRASInstalled = (Get-RemoteAccess).VpnS2SStatus
 if ($RRASInstalled -ne 'Installed')
 {
