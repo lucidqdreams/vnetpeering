@@ -154,8 +154,8 @@
     "VNet2InternalSubnetName": "Internal",      
     "NamingSuffix": "",        
             
-    "VNet1Name": "[concat(variables('vnet1'),'-vnet',variables('NamingSuffix') )]",
-    "VNet2Name": "[concat(variables('vnet2'),'-vnet',variables('NamingSuffix'))]",
+    "VNet1Name": "[concat(variables('vnet1'),variables('NamingSuffix'),'-vnet' )]",
+    "VNet2Name": "[concat(variables('vnet2'),variables('NamingSuffix'),'-vnet')]",
     "vnetID1": "[resourceId('Microsoft.Network/virtualNetworks', variables('VNet1Name'))]",
     "vnetID2": "[resourceId('Microsoft.Network/virtualNetworks', variables('VNet2Name'))]",    
     
@@ -167,12 +167,12 @@
     "RouteTable1Name": "[concat('Routeto',variables('VNet1'),variables('NamingSuffix'),'-rt' )]",
     "RouteTable2Name": "[concat('Routeto',variables('VNet2'),variables('NamingSuffix'),'-rt' )]",
     
-    "TunnelnsgName": "[concat(variables('TunnelSubnetName'),'-nsg',variables('NamingSuffix') )]",
+    "TunnelnsgName": "[concat(variables('TunnelSubnetName'),variables('NamingSuffix'),'-nsg' )]",
     "TunnelnsgID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('TunnelnsgName'))]",    
     "NICPrefixVNet1": "[concat(variables('VNet1'),variables('vmName'))]",
     "NICPrefixVNet2": "[concat(variables('VNet2'),variables('vmName'))]",
-    "VNet1TunnelPIPName": "[concat(variables('VNet1'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
-    "VNet2TunnelPIPName": "[concat(variables('VNet2'),'-',variables('TunnelSubnetName'),'-pip',variables('NamingSuffix'))]",    
+    "VNet1TunnelPIPName": "[concat(variables('VNet1'),'-',variables('TunnelSubnetName'),variables('NamingSuffix'),'-pip')]",    
+    "VNet2TunnelPIPName": "[concat(variables('VNet2'),'-',variables('TunnelSubnetName'),variables('NamingSuffix'),'-pip')]",    
     
     "SharedSecret": "[parameters('SharedSecret')]",
     "InstallRRASDSC": "[concat(parameters('_artifactsLocation'), 'DSC/InstallRRAS.zip', parameters('_artifactsLocationSasToken'))]",
