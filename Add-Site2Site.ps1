@@ -33,7 +33,7 @@ $RRASInstalled = (Get-RemoteAccess).VpnS2SStatus
 if ($RRASInstalled -ne 'Installed')
 {
     write-output 'Installing VpnS2S'
-    Install-RemoteAccess -VpnType VpnS2S
+    Install-RemoteAccess -VpnType VpnS2S -Verbose
     start-sleep 30
 
 }
@@ -46,7 +46,7 @@ $existing = get-VpnS2SInterface | where {$_.name -eq $S2SName}
 if ($existing.name -eq $S2SName)
 {
     Write-Output "Existing Tunnel $S2SName Found, Deleting..."
-    disconnect-VpnS2SInterface -Name $S2SName -Confirm:$false -Force
+    disconnect-VpnS2SInterface -Name $S2SName -Confirm:$false -Force 
     remove-VpnS2SInterface -Name $S2SName -Confirm:$false -Force
 }
 

@@ -1,3 +1,6 @@
+# You can use xRemoteAccess for greater configuration control
+# https://github.com/mgreenegit/xRemoteAccess/
+
 configuration InstallRRAS
 {
    param
