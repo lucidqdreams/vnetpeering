@@ -17,9 +17,10 @@ Requirements:
 - This solution does not take into account DNS resolution
 - The combination of VNet name and vmName must be less than 15 characters
 	
-    
 This template provides default values for VNet naming and IP addressing.  It requires a password for the administrator (rrasadmin) and also offers the ability to use your own storage blob with SAS token.  Be careful to keep these values within legal ranges as deployment may fail.  The powershell DSC package is executed on each RRAS VM and installing routing and all required dependent services and features.  This DSC can be customized further if needed.  The custom script extension run the following script and Add-Site2Site.ps1 configures the VPNS2S tunnel between the two RRAS servers with a shared key.  You can view the detailed output from the custom script extension to see the results of the VPN tunnel configuration
 
 ![alt text](https://github.com/lucidqdreams/vnetpeering/blob/master/Images/S2SVPNTunnelDetailed.jpg)
 
-*Note.   When deleting the resource group, currently on (1907) you have to manually detach the NSG's from the tunnel subnet to ensure the delete resource group completes
+There are two outputs on this template INTERNALSUBNETREFVNET1 and INTERNALSUBNETREFVNET2 which are the Resource IDs for the internel subnets, if you want to use this in a pipeline style deployment pattern.
+
+NOTE, When deleting the resource group, currently on (1907) you have to manually detach the NSG's from the tunnel subnet to ensure the delete resource group completes
