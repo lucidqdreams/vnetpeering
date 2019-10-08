@@ -22,6 +22,7 @@ Things to Consider:
 - This solution does not take into account DNS resolution
 - The combination of VNet name and vmName must be less than 15 characters
 - This template is designed to have the VNet names customized for VNet1 and VNet2
+- This template is using BYOL windows
 - When deleting the resource group, currently on (1907) you have to manually detach the NSG's from the tunnel subnet to ensure the delete resource group completes
 - This template is using a DS3v2 vm.  The RRAS service installs and run Windows internal SQL Server.  This can cause memory issues if your VM size is too small.  Validate performance before reducing the VM size.
 - This is not a highly avaliable solution.  If you require a more HA style solution you can add a second VM, you would have to manually Change the route in the route table to the internal IP of the secondary interface.  You would also need to configure the mutliple Tunnels to cross connect.
