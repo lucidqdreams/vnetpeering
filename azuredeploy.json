@@ -126,9 +126,7 @@
 
   "variables": {
     "computeApiVersion": "2017-12-01",
-    "networkApiVersion": "2017-10-01",
-    "storageApiVersion": "2017-10-01",
-    "deploymentApiVersion": "2018-05-01",
+    "deploymentApiVersion": "2018-09-01",
 
     "WindowsImageSKU": "2016-Datacenter",
     "storageAccountType": "Standard_LRS",
@@ -583,46 +581,61 @@
         }       
       },
       {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('VNet1VMName'), '1','/CustomScriptExtension')]",
-        "location": "[resourceGroup().location]",
+        "type": "Microsoft.Resources/deployments",
+        "name": "ConfigureS2SVPN",
+        "apiversion": "[variables('deploymentApiVersion')]",
         "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "fileUris": [
-                "[variables('scriptFilepath')]"
-              ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet2TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet2AddressSpace'),' -SharedSecret ', variables('SharedSecret'))]"
-            }
-          },
-        
+          "mode": "Incremental",
+          "parameters": {},
+          "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "name": "[concat(variables('VNet1VMName'), '1','/CustomScriptExtension')]",
+                "apiversion": "[variables('computeApiVersion')]",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "publisher": "Microsoft.Compute",
+                  "type": "CustomScriptExtension",
+                  "typeHandlerVersion": "1.8",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "fileUris": [
+                      "[variables('scriptFilepath')]"
+                      ],
+                      "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet2TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet2AddressSpace'),' -SharedSecret ', variables('SharedSecret'))]"
+                  }
+                }
+              },
+              {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "name": "[concat(variables('VNet2VMName'), '1','/CustomScriptExtension')]",
+                "apiversion": "[variables('computeApiVersion')]",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "publisher": "Microsoft.Compute",
+                  "type": "CustomScriptExtension",
+                  "typeHandlerVersion": "1.8",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "fileUris": [
+                        "[variables('scriptFilepath')]"
+                      ],
+                      "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
+                    }
+                  }     
+                }
+            ]
+          }
+        },
         "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet1VMName'), '1')))]"
+          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet1VMName'), '1')))]",
+          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet2VMName'), '1')))]"
         ]
-      },
-      {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('VNet2VMName'), '1','/CustomScriptExtension')]",
-        "location": "[resourceGroup().location]",
-        "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "fileUris": [
-                "[variables('scriptFilepath')]"
-              ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
-            }
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet2VMName'), '1')))]"
-          ]      
-        }
+      }
+
     ],
 
   "outputs": {

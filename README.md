@@ -13,7 +13,6 @@ Requirements:
 - ASDK or Azure Stack Integrated System with latest updates applied. 
 - Required Azure Stack Marketplace items:
     -  Windows Server 2016 Datacenter (latest build recommended)
-	-  PowerShell DSC Extension
 	-  Custom Script Extension
 
 Things to Consider:
@@ -24,6 +23,7 @@ Things to Consider:
 - The combination of VNet name and vmName must be less than 15 characters
 - This template is designed to have the VNet names customized for VNet1 and VNet2
 - When deleting the resource group, currently on (1907) you have to manually detach the NSG's from the tunnel subnet to ensure the delete resource group completes
+- This is not a highly avaliable solution.  If you require a more HA style solution you can add a second VM, you would have to manually Change the route in the route table to the internal IP of the secondary interface.  You would also need to configure the mutliple Tunnels to cross connect.
 
 Optionial:
 
