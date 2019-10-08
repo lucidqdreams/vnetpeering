@@ -130,8 +130,9 @@
 
     "WindowsImageSKU": "2016-Datacenter",
     "storageAccountType": "Standard_LRS",
+    "ManagedOSDiskType": "Premium_LRS",
     "storageName": "[concat('sa', uniquestring(resourceGroup().id))]",
-    "VMSize": "Standard_DS2_v2",    
+    "VMSize": "Standard_DS3_v2",    
     "windowsImagePublisher": "MicrosoftWindowsServer",
     "windowsImageOffer": "WindowsServer",
     "windowsImageVersion": "latest",   
@@ -224,7 +225,7 @@
               "destinationPortRange": "3389",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
-              "access": "Deny",
+              "access": "Allow",
               "priority": 130,
               "direction": "Inbound"
             }
@@ -497,7 +498,10 @@
           "osProfile": {
             "computerName": "[concat(variables('VNet1VMName'), '1')]",
             "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]"
+            "adminPassword": "[parameters('adminPassword')]",
+             "windowsConfiguration": {
+                "provisionVmAgent": "true"
+              }
           },
           "storageProfile": {
             "imageReference": {
@@ -508,10 +512,13 @@
             },
             "osDisk": {
               "name": "[concat(variables('VNet1VMName'), '1-osdisk')]",
+              "managedDisk": {
+                "storageAccountType": "[variables('ManagedOSDiskType')]"
+              }, 
               "caching": "ReadWrite",
               "createOption": "FromImage"
             }
-        },        
+          },        
           "networkProfile": {
             "networkInterfaces": [
               {
@@ -527,6 +534,13 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet1'),'1-', variables('VNet1InternalSubnetName'),'-nic'))]"
               }
             ]
+          },
+          "licenseType": "Windows_Server",
+           "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true,
+                "storageUri": "[reference(resourceId(resourcegroup().name, 'Microsoft.Storage/storageAccounts', variables('storageName')), '2015-06-15').primaryEndpoints['blob']]"
+            }
           }
         }       
       },
@@ -547,7 +561,10 @@
           "osProfile": {
             "computerName": "[concat(variables('VNet2VMName'), '1')]",
             "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]"
+            "adminPassword": "[parameters('adminPassword')]",
+            "windowsConfiguration": {
+              "provisionVmAgent": "true"
+            }
           },
           "storageProfile": {
             "imageReference": {
@@ -558,6 +575,9 @@
             },
             "osDisk": {
               "name": "[concat(variables('VNet2VMName'), '1-osdisk')]",
+              "managedDisk": {
+                "storageAccountType": "[variables('ManagedOSDiskType')]"
+              }, 
               "caching": "ReadWrite",
               "createOption": "FromImage"
             }
@@ -577,68 +597,115 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet2'),'1-', variables('VNet2InternalSubnetName'),'-nic'))]"
               }
             ]
+          },
+          "licenseType": "Windows_Server",
+           "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true,
+                "storageUri": "[reference(resourceId(resourcegroup().name, 'Microsoft.Storage/storageAccounts', variables('storageName')), '2015-06-15').primaryEndpoints['blob']]"
+            }
           }
         }       
       },
+     
       {
-        "type": "Microsoft.Resources/deployments",
-        "name": "ConfigureS2SVPN",
-        "apiversion": "[variables('deploymentApiVersion')]",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(concat(variables('VNet1VMName'), '1','/InstallRRAS'))]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "InstallRRAS"
+        },
         "properties": {
-          "mode": "Incremental",
-          "parameters": {},
-          "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-            "contentVersion": "1.0.0.0",
-            "resources": [
-              {
-                "type": "Microsoft.Compute/virtualMachines/extensions",
-                "name": "[concat(variables('VNet1VMName'), '1','/CustomScriptExtension')]",
-                "apiversion": "[variables('computeApiVersion')]",
-                "location": "[resourceGroup().location]",
-                "properties": {
-                  "publisher": "Microsoft.Compute",
-                  "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "1.8",
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "fileUris": [
-                      "[variables('scriptFilepath')]"
-                      ],
-                      "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet2TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet2AddressSpace'),' -SharedSecret ', variables('SharedSecret'))]"
-                  }
-                }
-              },
-              {
-                "type": "Microsoft.Compute/virtualMachines/extensions",
-                "name": "[concat(variables('VNet2VMName'), '1','/CustomScriptExtension')]",
-                "apiversion": "[variables('computeApiVersion')]",
-                "location": "[resourceGroup().location]",
-                "properties": {
-                  "publisher": "Microsoft.Compute",
-                  "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "1.8",
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "fileUris": [
-                        "[variables('scriptFilepath')]"
-                    ],
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
-                  }
-                }     
-              }
-            ]
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.77",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesUrl": "[variables('InstallRRASDSC')]",
+            "configurationFunction": "InstallRRAS.ps1\\InstallRRAS"
+          },
+          "protectedSettings": {
+            "Items": {
+            }
           }
         },
         "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet1VMName'), '1')))]",
+          "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet1VMName'), '1')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(concat(variables('VNet2VMName'), '1','/InstallRRAS'))]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "InstallRRAS"
+        },
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.77",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesUrl": "[variables('InstallRRASDSC')]",
+            "configurationFunction": "InstallRRAS.ps1\\InstallRRAS"
+          },
+          "protectedSettings": {
+            "Items": {
+            }
+          }
+        },
+        "dependsOn": [
           "[resourceId('Microsoft.Compute/virtualMachines',concat(concat(variables('VNet2VMName'), '1')))]"
         ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('VNet1VMName'), '1','/CustomScriptExtension')]",
+        "apiversion": "[variables('computeApiVersion')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[variables('scriptFilepath')]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet2TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet2AddressSpace'),' -SharedSecret ', variables('SharedSecret'))]"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions',concat(variables('VNet1VMName'), '1'),'InstallRRAS')]"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('VNet2VMName'), '1','/CustomScriptExtension')]",
+        "apiversion": "[variables('computeApiVersion')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+                "[variables('scriptFilepath')]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Compute/virtualMachines/extensions',concat(variables('VNet2VMName'), '1'),'InstallRRAS')]"
+        ]     
       }
-
-    ],
-
+  ],
   "outputs": {
+    "adminUsername": {
+      "type": "string",
+      "value": "[parameters('adminUsername')]"
+    },
     "InternalSubnetRefVNet1":{
       "type": "string",
       "value":"[variables('InternalSubnetRefVNet1')]"
