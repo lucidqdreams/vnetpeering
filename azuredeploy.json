@@ -622,11 +622,11 @@
                   "settings": {
                     "fileUris": [
                         "[variables('scriptFilepath')]"
-                      ],
-                      "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
-                    }
-                  }     
-                }
+                    ],
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ',variables('scriptFilename'), ' ', '-TargetRRASIP ',  reference(variables('VNet1TunnelPIPName')).ipAddress, ' -TargetIPRange ', variables('VNet1AddressSpace'),' -SharedSecret ', variables('SharedSecret')) ]"
+                  }
+                }     
+              }
             ]
           }
         },
