@@ -10,7 +10,7 @@ param
 
 
 $S2SName = ($TargetIPRange.Replace('.','')).Replace('/','')
-Write-Output "Creating Tunnel called $S2SName"
+Write-information "Creating Tunnel called $S2SName"
 
 $TargetIPRangeMetric = $TargetIPRange + ':100'
 
