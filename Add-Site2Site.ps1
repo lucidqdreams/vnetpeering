@@ -28,8 +28,10 @@ else
     Write-Output 'Installing Routing'
     Install-WindowsFeature Routing -IncludeManagementTools -Confirm:$false -Verbose
     start-sleep 10
-    Set-Service -Name remoteaccess -StartupType Automatic
-    Start-Service -Name remoteaccess 
+    Write-Output 'Set Automatic Start for RemoateAccess'
+    Set-Service -Name "remoteaccess" -StartupType Automatic -Confirm:$false -Verbose
+    Write-Output 'Start RemoateAccess Service '
+    Start-Service -Name "remoteaccess" -Confirm:$false -Verbose
     start-sleep 10
 }
 

@@ -13,8 +13,9 @@ Requirements:
 - ASDK or Azure Stack Integrated System with latest updates applied. 
 - Required Azure Stack Marketplace items:
     -  Windows Server 2016 Datacenter (latest build recommended)
+	-  PowerShell DSC Extension
 	-  Custom Script Extension
-	
+
 Things to Consider:
 
 - A Network Security Group is applied to the template Tunnel Subnet.  It is recommended to secure the internal subnet in each VNet with an additional NSG.
