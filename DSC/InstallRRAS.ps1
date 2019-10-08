@@ -15,7 +15,6 @@ configuration InstallRRAS
         PendingReboot BeforeRoutingInstall
         {
             Name       = 'BeforeRoutingInstall'
-            DependsOn  = '[File]ExchangeBinaries'
         }
         WindowsFeature Routing
         {
