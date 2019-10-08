@@ -26,7 +26,7 @@ if ($RoutingInstallation.Installed)
 else
 {
     Write-Output 'Installing Routing'
-    Install-WindowsFeature Routing -IncludeManagementTools -Verbose
+    Install-WindowsFeature Routing -IncludeManagementTools -Confirm:$false -Verbose
 }
 
 $RRASInstalled = (Get-RemoteAccess).VpnS2SStatus
