@@ -27,7 +27,12 @@ else
 {
     Write-Output 'Installing Routing'
     Install-WindowsFeature Routing -IncludeManagementTools -Confirm:$false -Verbose
+    start-sleep 10
+    Set-Service -Name remoteaccess -StartupType Automatic
+    Start-Service -Name remoteaccess 
+    start-sleep 10
 }
+
 
 $RRASInstalled = (Get-RemoteAccess).VpnS2SStatus
 if ($RRASInstalled -ne 'Installed')
