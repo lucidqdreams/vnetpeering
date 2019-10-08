@@ -525,6 +525,12 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet1'),'1-', variables('VNet1InternalSubnetName'),'-nic'))]"
               }
             ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true,
+                "storageUri": "[reference(resourceId(resourcegroup().name, 'Microsoft.Storage/storageAccounts', variables('storageName')), '2015-06-15').primaryEndpoints['blob']]"
+            }
           }
         }       
       },
@@ -575,6 +581,12 @@
                 "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('NICPrefixVNet2'),'1-', variables('VNet2InternalSubnetName'),'-nic'))]"
               }
             ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+                "enabled": true,
+                "storageUri": "[reference(resourceId(resourcegroup().name, 'Microsoft.Storage/storageAccounts', variables('storageName')), '2015-06-15').primaryEndpoints['blob']]"
+            }
           }
         }       
       },
